@@ -1,2 +1,2 @@
 # RealtimeChart
-RealtimeChart code sample with Express, MongoDB, SocketIO, and ChartJS
+Realtime chart code sample with Express Js, MongoDB, Socket IO, and ChartJS
