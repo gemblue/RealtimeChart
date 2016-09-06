@@ -9,13 +9,10 @@
 </head>
 
 <body>
-   <center>
    <h1>Quick Vote</h1>
    <div class="vote-result-wrapper">
-   <canvas id="vote-result"></canvas>
+      <canvas id="vote-result"></canvas>
    </div>
-</center>
-
 </body>
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
@@ -26,45 +23,37 @@
 // Setting socket
 var socket = io();
 var data;
-var myPieChart;
+var myChart;
 var context;
 
 socket.on('vote', function (response) {
 
-  	// Override
-   data.datasets[0].data[0] = response[0].total_vote;
-   data.datasets[0].data[1] = response[1].total_vote;
-   data.datasets[0].data[2] = response[2].total_vote;
+   var i = 0;
 
+  	for (var key in response) {
+      data.labels[i] = response[i]._id;
+      data.datasets[0].data[i] = response[i].total_vote;
+      i++;
+   }
+   
   	// Update chart
-   myPieChart.update(); 
+   myChart.update(); 
 });
 
-// Pie setup
+// Chart Data
 data = {
-   labels: [
-      "Megawati",
-      "Jokowi",
-      "Habibie"
-   ],
-   datasets: [{
-      data: [0, 0, 0],
-      backgroundColor: [
-      "#FF6384",
-      "#36A2EB",
-      "#FFCE56"
-      ],
-      hoverBackgroundColor: [
-      "#FF6384",
-      "#36A2EB",
-      "#FFCE56"
-      ]
-   }]
+   labels: [],
+   datasets: [
+        {
+            label: [],
+            data: [],
+        }
+    ]
 };
 
 context = document.getElementById('vote-result').getContext('2d');
-myPieChart = new Chart(context,{
-   type: 'pie',
+myChart = new Chart(context,{
+   type: 'bar',
    data: data,
    animation:{ 
       animateScale:true

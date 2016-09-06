@@ -22,18 +22,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/realtime_chart");
 var schema = mongoose.Schema({name: String});
 var Vote = mongoose.model('Vote', schema);
 
-// Allow CORS
-app.all('*', function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-	res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
-	if (req.method == 'OPTIONS') {
-		res.status(200).end();
-	} else {
-		next();
-	}
-});
-
 /* 
 Routes
 */
@@ -65,7 +53,7 @@ app.post('/vote', function(req, res) {
 			console.log(results);
 			req.io.sockets.emit('vote', results);
 		}
-	);
+		);
 
 	res.send({'message': 'Successfully added.'});
 });
@@ -95,9 +83,8 @@ io.on('connection', function (socket) {
 			socket.emit('vote', results);
 		}
 	);
-
 });
 
 // Start
 server.listen(3000);
-console.log('Apps running in port 3000');
+console.log('Open http://localhost:3000');
