@@ -1,0 +1,78 @@
+<html>
+<head>
+<style>
+.vote-result-wrapper{
+	width: 700px;
+	height: 700px;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js"></script>
+</head>
+
+<body>
+
+<center>
+	<h1>Quick Vote</h1>
+	<div class="vote-result-wrapper">
+		<canvas id="vote-result"></canvas>
+	</div>
+</center>
+
+</body>
+
+<script>
+// Setting socket
+var socket = io();
+var data;
+var myPieChart;
+var context;
+
+socket.on('vote', function (response) {
+  	
+  	// Timpah chart data
+    data.datasets[0].data[0] = response[0].total_vote;
+    data.datasets[0].data[1] = response[1].total_vote;
+  	data.datasets[0].data[2] = response[2].total_vote;
+
+  	// Update chart
+  	myPieChart.update();
+});
+
+// Pie setup
+data = {
+    labels: [
+        "Megawati",
+        "Jokowi",
+        "Habibie"
+    ],
+    datasets: [
+        {
+            data: [0, 0, 0],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ]
+        }]
+};
+
+context = document.getElementById('vote-result').getContext('2d');
+myPieChart = new Chart(context,{
+    type: 'pie',
+    data: data,
+    animation:{
+        animateScale:true
+    }
+});
+
+</script>
+
+</html>

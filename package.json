@@ -1,0 +1,10 @@
+{
+  "name": "RealtimeChart",
+  "main": "app.js",
+  "dependencies": {
+  	"express": "latest",
+    "mongoose": "latest",
+    "body-parser": "latest",
+    "socket.io": "latest"
+  }
+}
