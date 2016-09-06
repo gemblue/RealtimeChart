@@ -9,8 +9,8 @@ var io       = require('socket.io')(server);
 // Config
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req,res,next){
-    req.io = io;
-    next();
+	req.io = io;
+	next();
 });
 
 // Tell express where to serve static files from
@@ -25,13 +25,13 @@ var Vote = mongoose.model('Vote', schema);
 // Allow CORS
 app.all('*', function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
-  	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  	res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
-  	if (req.method == 'OPTIONS') {
-    	res.status(200).end();
-  	} else {
-    	next();
-  	}
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+	if (req.method == 'OPTIONS') {
+		res.status(200).end();
+	} else {
+		next();
+	}
 });
 
 /* 
@@ -40,40 +40,40 @@ Routes
 
 // Render homepage.
 app.get('/', function(req, res) {
-  res.sendfile('index.html');
+	res.sendfile('index.html');
 });
 
 // Route for voting
 app.post('/vote', function(req, res) {
- 	var field = [{name: req.body.name}];
- 	
- 	var newVote = new Vote(field[0]);
+	var field = [{name: req.body.name}];
+
+	var newVote = new Vote(field[0]);
 	
 	newVote.save(function(err, data) {
-	    console.log('Saved');
+		console.log('Saved');
 	});
 
 	Vote.aggregate(
 		
-	   	[{ "$group": {
-	       	"_id": "$name",
-	       	"total_vote": { "$sum": 1 }
-	  	}}],
+		[{ "$group": {
+			"_id": "$name",
+			"total_vote": { "$sum": 1 }
+		}}],
 
-	   	function(err, results) {
-	       if (err) throw err;
-	       console.log(results);
-	       req.io.sockets.emit('vote', results);
-   		}
-   	);
+		function(err, results) {
+			if (err) throw err;
+			console.log(results);
+			req.io.sockets.emit('vote', results);
+		}
+	);
 
-  	res.send({'message': 'Successfully added.'});
+	res.send({'message': 'Successfully added.'});
 });
 
 app.get('/data', function(req, res) {
-    Vote.find().exec(function(err, msgs) {
-    res.json(msgs);
-  });
+	Vote.find().exec(function(err, msgs) {
+		res.json(msgs);
+	});
 });
 
 /*
@@ -84,17 +84,17 @@ io.on('connection', function (socket) {
 
 	Vote.aggregate(
 
-	   	[{ "$group": {
-	       	"_id": "$name",
-	       	"total_vote": { "$sum": 1 }
-	  	}}],
+		[{ "$group": {
+			"_id": "$name",
+			"total_vote": { "$sum": 1 }
+		}}],
 
-	   	function(err, results) {
-	       if (err) throw err;
-	      	
-	       socket.emit('vote', results);
-   		}
-   	);
+		function(err, results) {
+			if (err) throw err;
+
+			socket.emit('vote', results);
+		}
+	);
 
 });
 
