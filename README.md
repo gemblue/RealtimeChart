@@ -25,4 +25,4 @@ Tutorial : https://www.codepolitan.com/membuat-realtime-chart-dengan-express-cha
 
 ## Result
 
-!()[http://g.recordit.co/BmOty7CDRd.gif]
+![](http://g.recordit.co/BmOty7CDRd.gif)
